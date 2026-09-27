@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Happy Birthday D! ❤️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Cinzel:wght@600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <style>
+    :root {
+      --bg-dark: #0b070f;
+      --bg-card: rgba(26, 16, 33, 0.65);
+      --border-accent: rgba(230, 150, 180, 0.25);
+      --accent-pink: #f48fb1;
+      --accent-gold: #f3d08a;
+      --text-main: #fce4ec;
+      --text-muted: #d1b3c4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(186, 104, 200, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(244, 143, 177, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(30, 15, 38, 0.9) 0%, #08040b 100%);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 50px;
+    }
+
+    /* Floating Particles Canvas */
+    #particle-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px 18px;
+    }
+
+    /* Header Section */
+    .header-box {
+      text-align: center;
+      padding: 35px 20px 20px;
+    }
+
+    .subtitle-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(244, 143, 177, 0.12);
+      border: 1px solid rgba(244, 143, 177, 0.3);
+      border-radius: 30px;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent-pink);
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+
+    h1.main-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.8rem;
+      background: linear-gradient(135deg, #fff 20%, var(--accent-pink) 60%, var(--accent-gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.15;
+      margin-bottom: 10px;
+      text-shadow: 0 0 30px rgba(244, 143, 177, 0.2);
+    }
+
+    p.tagline {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* Card Styling */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-accent);
+      border-radius: 24px;
+      padding: 24px;
+      margin-top: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      color: var(--accent-gold);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Interactive Cake Section */
+    .cake-container {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .cake-wrapper {
+      position: relative;
+      width: 140px;
+      height: 120px;
+      margin: 0 auto 15px;
+      cursor: pointer;
+    }
+
+    .cake-base {
+      position: absolute;
+      bottom: 0;
+      width: 140px;
+      height: 60px;
+      background: linear-gradient(to right, #6d28d9, #be185d);
+      border-radius: 12px 12px 6px 6px;
+      box-shadow: inset 0 -6px 0 rgba(0,0,0,0.2);
+    }
+
+    .cake-top {
+      position: absolute;
+      bottom: 60px;
+      left: 15px;
+      width: 110px;
+      height: 45px;
+      background: linear-gradient(to right, #8b5cf6, #ec4899);
+      border-radius: 10px 10px 0 0;
+    }
+
+    .frosting {
+      position: absolute;
+      bottom: 95px;
+      left: 15px;
+      width: 110px;
+      height: 12px;
+      background: #fce4ec;
+      border-radius: 6px;
+    }
+
+    .candle {
+      position: absolute;
+      bottom: 107px;
+      left: 63px;
+      width: 14px;
+      height: 35px;
+      background: repeating-linear-gradient(45deg, #f3d08a, #f3d08a 5px, #fff 5px, #fff 10px);
+      border-radius: 4px;
+    }
+
+    .flame {
+      position: absolute;
+      bottom: 142px;
+      left: 65px;
+      width: 10px;
+      height: 18px;
+      background: #ff9800;
+      border-radius: 50% 50% 20% 20%;
+      box-shadow: 0 0 15px #ff9800, 0 0 25px #ff5722;
+      animation: flicker 0.6s infinite alternate;
+      transform-origin: center bottom;
+      transition: all 0.3s ease;
+    }
+
+    .flame.out {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    @keyframes flicker {
+      0% { transform: scale(1) rotate(-2deg); }
+      100% { transform: scale(1.1) rotate(2deg); }
+    }
+
+    .cake-instruction {
+      font-size: 0.9rem;
+      color: var(--accent-pink);
+      font-weight: 500;
+    }
+
+    /* Romantic Letter Section */
+    .letter-envelope {
+      background: rgba(40, 20, 50, 0.8);
+      border: 1px dashed var(--accent-pink);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .letter-envelope.open {
+      background: rgba(30, 15, 38, 0.95);
+      border-style: solid;
+    }
+
+    .letter-preview {
+      text-align: center;
+      color: var(--text-main);
+    }
+
+    .letter-full {
+      display: none;
+      font-family: 'Caveat', cursive;
+      font-size: 1.35rem;
+      line-height: 1.6;
+      color: #fce4ec;
+      margin-top: 15px;
+      border-top: 1px solid rgba(244, 143, 177, 0.2);
+      padding-top: 15px;
+    }
+
+    .letter-envelope.open .letter-full {
+      display: block;
+    }
+
+    .letter-envelope.open .letter-preview-text {
+      display: none;
+    }
+
+    /* Reasons List */
+    .reasons-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .reason-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px 16px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .reason-card:active {
+      transform: scale(0.98);
+      background: rgba(244, 143, 177, 0.1);
+    }
+
+    .reason-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Action Buttons (Virtual Hug / Kisses) */
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, rgba(244, 143, 177, 0.2), rgba(186, 104, 200, 0.2));
+      border: 1px solid rgba(244, 143, 177, 0.4);
+      color: #fff;
+      padding: 14px;
+      border-radius: 16px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:active {
+      transform: scale(0.95);
+      background: linear-gradient(135deg, rgba(244, 143, 177, 0.4), rgba(186, 104, 200, 0.4));
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.85rem;
+      color: rgba(209, 179, 196, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="particle-canvas"></canvas>
+
+  <div class="container">
+    
+    <!-- Header Section -->
+    <div class="header-box">
+      <div class="subtitle-badge">To My Favorite Person</div>
+      <h1 class="main-title">Happy Birthday<br>D ❤️</h1>
+      <p class="tagline">Today is all about celebrating you!</p>
+    </div>
+
+    <!-- Cake & Candle Feature -->
+    <div class="glass-card cake-container">
+      <div class="card-title" style="justify-content: center;"> Make a Wish! ✨</div>
+      <div class="cake-wrapper" id="cakeWrapper" onclick="blowCandle()">
+        <div class="flame" id="flame"></div>
+        <div class="candle"></div>
+        <div class="frosting"></div>
+        <div class="cake-top"></div>
+        <div class="cake-base"></div>
+      </div>
+      <p class="cake-instruction" id="cakeInstruction">Tap the candle flame to blow it out!</p>
+    </div>
+
+    <!-- Heartfelt Love Letter -->
+    <div class="glass-card">
+      <div class="card-title">💌 A Special Message</div>
+      <div class="letter-envelope" id="letterEnvelope" onclick="toggleLetter()">
+        <div class="letter-preview">
+          <p class="letter-preview-text">Tap here to open your letter ✨</p>
+        </div>
+        <div class="letter-full">
+          My Dearest D,<br><br>
+          Having you in my life is the sweetest gift. You bring so much warm light, happiness, and comfort into my world every single day.<br><br>
+          On your special day, I wish you all the joy, success, and love that your heart can hold. May this year bring you closer to all your dreams.<br><br>
+          Thank you for simply being you.<br><br>
+          Always & Forever ❤️
+        </div>
+      </div>
+    </div>
+
+    <!-- Reasons Why I Love You -->
+    <div class="glass-card">
+      <div class="card-title">💖 Things I Love About You</div>
+      <div class="reasons-grid">
+        <div class="reason-card">
+          <span class="reason-icon">✨</span>
+          <span>Your warm and reassuring smile that brightens any day.</span>
+        </div>
+        <div class="reason-card">
+          <span class="reason-icon">🌟</span>
+          <span>How effortlessly thoughtful and caring you always are.</span>
+        </div>
+        <div class="reason-card">
+          <span class="reason-icon">🤝</span>
+          <span>The comfort and peace I feel whenever I'm with you.</span>
+        </div>
+        <div class="reason-card">
+          <span class="reason-icon">🎯</span>
+          <span>Your dedication, passion, and amazing personality.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Love Actions -->
+    <div class="action-grid">
+      <button class="btn-action" onclick="sendHugs()">
+        <span>🤗</span> Send Hug
+      </button>
+      <button class="btn-action" onclick="sendKisses()">
+        <span>💋</span> Send Kiss
+      </button>
+    </div>
+
+    <footer>
+      Crafted with love for D ❤️
+    </footer>
+
+  </div>
+
+  <script>
+    // Particle Canvas Background
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const particles = [];
+    class FloatingHeart {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + 20;
+        this.size = Math.random() * 12 + 8;
+        this.speedY = Math.random() * 1.5 + 0.5;
+        this.speedX = Math.sin(Math.random() * Math.PI) * 0.5;
+        this.opacity = Math.random() * 0.5 + 0.3;
+      }
+      update() {
+        this.y -= this.speedY;
+        this.x += this.speedX;
+        if (this.y < -20) this.reset();
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = '#f48fb1';
+        ctx.font = `${this.size}px serif`;
+        ctx.fillText('❤️', this.x, this.y);
+        ctx.restore();
+      }
+    }
+
+    for (let i = 0; i < 20; i++) {
+      particles.push(new FloatingHeart());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // Candle Blow Out Interactive Logic
+    let candleBlown = false;
+    function blowCandle() {
+      if (candleBlown) return;
+      candleBlown = true;
+      
+      const flame = document.getElementById('flame');
+      const instruction = document.getElementById('cakeInstruction');
+      
+      flame.classList.add('out');
+      instruction.innerHTML = "✨ Wish Made! May all your dreams come true! ✨";
+      
+      // Confetti burst
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#f48fb1', '#f3d08a', '#e1bee7', '#ffffff']
+      });
+    }
+
+    // Toggle Letter
+    function toggleLetter() {
+      const envelope = document.getElementById('letterEnvelope');
+      envelope.classList.toggle('open');
+    }
+
+    // Action Buttons Logic
+    function sendHugs() {
+      confetti({
+        particleCount: 30,
+        scalar: 1.2,
+        shapes: ['circle'],
+        colors: ['#f48fb1', '#ce93d8'],
+        origin: { y: 0.8 }
+      });
+    }
+
+    function sendKisses() {
+      confetti({
+        particleCount: 35,
+        spread: 60,
+        origin: { y: 0.8 },
+        colors: ['#ff4081', '#f48fb1']
+      });
+    }
+  </script>
+</body>
+</html>
